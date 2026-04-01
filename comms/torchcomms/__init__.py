@@ -35,9 +35,9 @@ def _load_libtorchcomms() -> None:
     libtorchcomms_path = os.path.join(os.path.dirname(__file__), "libtorchcomms.so")
     # OSS build, buck native linking links everything together so this is not needed
     if os.path.exists(libtorchcomms_path):
-        # load this using RTLD_LOCAL so that we don't pollute the global namespace
-        # We need to load this upfront since _comms and _comms_* depend on it
-        # and won't be able to find it themselves.
+        # RTLD_LOCAL: each extension gets its own symbol scope, preventing
+        # glog/gflags/fmt symbol conflicts between libtorchcomms.so and the
+        # backend extensions (which may link their own copies).
         ctypes.CDLL(libtorchcomms_path, mode=ctypes.RTLD_LOCAL)
 
 

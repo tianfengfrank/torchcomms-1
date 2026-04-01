@@ -149,8 +149,8 @@ function build_third_party {
     build_fb_oss_library "https://github.com/gflags/gflags.git" "v2.2.2" gflags "-DBUILD_SHARED_LIBS=ON"
     # we need both static and dynamic glog since thrift generator can't
     # statically link against glog.
-    build_fb_oss_library "https://github.com/google/glog.git" "v0.4.0" glog
-    build_fb_oss_library "https://github.com/google/glog.git" "v0.4.0" glog "-DBUILD_SHARED_LIBS=ON"
+    build_fb_oss_library "https://github.com/google/glog.git" "v0.7.1" glog
+    build_fb_oss_library "https://github.com/google/glog.git" "v0.7.1" glog "-DBUILD_SHARED_LIBS=ON"
     build_fb_oss_library "https://github.com/facebook/zstd.git" "v1.5.6" zstd
     build_automake_library "https://github.com/jedisct1/libsodium.git" "1.0.20-RELEASE" sodium
     build_fb_oss_library "https://github.com/fastfloat/fast_float.git" "v8.0.2" fast_float "-DFASTFLOAT_INSTALL=ON"

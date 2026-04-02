@@ -41,7 +41,8 @@ target_include_directories(torchcomms_comms_nccl PRIVATE
 target_compile_features(torchcomms_comms_nccl PRIVATE cxx_std_20)
 target_link_directories(torchcomms_comms_nccl PRIVATE ${CONDA_LIB})
 target_link_libraries(torchcomms_comms_nccl PRIVATE
-    glog::glog
+    glog::glog_headers
+    fmt::fmt
     torchcomms
     ${TORCH_LIBRARIES}
     ${TORCH_PYTHON_LIB}

@@ -6,13 +6,21 @@ include_guard(GLOBAL)
 # Check for static library first (e.g., installed by build_ncclx.sh).
 # This avoids find_package creating SHARED IMPORTED targets that can't be
 # rejected without a duplicate-target conflict in the FetchContent fallback.
-if(EXISTS "${CONDA_LIB}/libgflags.a" AND EXISTS "${CONDA_INCLUDE}/gflags/gflags.h")
-    add_library(gflags::gflags STATIC IMPORTED GLOBAL)
+if(EXISTS "${CONDA_INCLUDE}/gflags/gflags.h")
+    # Prefer static, fall back to shared.
+    if(EXISTS "${CONDA_LIB}/libgflags.a")
+        set(_GFLAGS_LIB "${CONDA_LIB}/libgflags.a")
+    elseif(EXISTS "${CONDA_LIB}/libgflags.so")
+        set(_GFLAGS_LIB "${CONDA_LIB}/libgflags.so")
+    else()
+        set(_GFLAGS_LIB "gflags")
+    endif()
+    add_library(gflags::gflags INTERFACE IMPORTED GLOBAL)
     set_target_properties(gflags::gflags PROPERTIES
-        IMPORTED_LOCATION "${CONDA_LIB}/libgflags.a"
         INTERFACE_INCLUDE_DIRECTORIES "${CONDA_INCLUDE}"
+        INTERFACE_LINK_LIBRARIES "${_GFLAGS_LIB}"
     )
-    message(STATUS "Using static gflags: ${CONDA_LIB}/libgflags.a")
+    message(STATUS "Using gflags: ${_GFLAGS_LIB}")
 else()
     find_package(gflags 2.2.2 QUIET CONFIG NO_CMAKE_PACKAGE_REGISTRY)
     if(gflags_FOUND)

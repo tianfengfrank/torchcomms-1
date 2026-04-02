@@ -17,7 +17,6 @@ if(USE_NCCLX AND NOT USE_SYSTEM_LIBS)
             COMMAND ${ROOT}/build_ncclx.sh
             WORKING_DIRECTORY ${ROOT}
             RESULT_VARIABLE _ncclx_result
-            OUTPUT_VARIABLE _ncclx_output
         )
         if(_ncclx_result)
             message(FATAL_ERROR "NCCLX build failed: ${_ncclx_result}")

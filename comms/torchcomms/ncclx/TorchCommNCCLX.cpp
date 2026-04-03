@@ -17,6 +17,7 @@
 
 #include "comms/torchcomms/TorchCommFactory.hpp"
 #include "comms/torchcomms/ncclx/TorchCommNCCLXBootstrap.hpp"
+#include "comms/torchcomms/ncclx/TorchCommNCCLXCCA.hpp"
 #include "comms/torchcomms/utils/Logging.hpp"
 #include "comms/torchcomms/utils/TracingGuard.hpp"
 #include "comms/torchcomms/utils/Utils.hpp"
@@ -2451,6 +2452,10 @@ class NCCLXRegistration {
                   });
       return ncclx_allocator;
     });
+
+    // Register memory hook factory
+    TorchCommFactory::get().register_hook_factory(
+        "ncclx", []() { CachingAllocatorHook::getInstance(); });
   }
 };
 

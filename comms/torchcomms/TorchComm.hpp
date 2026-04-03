@@ -285,4 +285,9 @@ std::shared_ptr<TorchComm> new_comm(
 // Note: Allocator is created once per backend and reused across all instances
 std::shared_ptr<c10::Allocator> get_mem_allocator(const std::string& backend);
 
+// Attach the CCA memory hook for the specified backend without creating a
+// communicator. Useful for P2P transfer cases where memory needs to be
+// registered for RDMA independently of any communicator.
+void attach_memory_hook(const std::string& backend);
+
 } // namespace torch::comms

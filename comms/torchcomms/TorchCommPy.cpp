@@ -1912,7 +1912,7 @@ Example:
           R"(
 Initialize a persistent AllGather operation.
 
-This is a SM free collective operation where the memory is pre-registered and uses 
+This is a SM free collective operation where the memory is pre-registered and uses
 Copy Engine or DMA to move data from one rank to the other.
 
 Args:
@@ -2218,6 +2218,29 @@ Args:
 
       Returns:
           A c10::Allocator object for the specified backend.
+      )",
+      py::arg("backend"),
+      py::call_guard<py::gil_scoped_release>());
+
+  m.def(
+      "attach_memory_hook",
+      [](const std::string& backend) { attach_memory_hook(backend); },
+      R"(
+      Attach the CCA (CUDA Caching Allocator) memory hook for the specified backend.
+
+      This initializes the global memory registration hook that automatically
+      registers/deregisters GPU memory segments with the backend's transport layer
+      (e.g., ctran for ncclx) as they are allocated/freed by PyTorch's
+      CUDACachingAllocator.
+
+      This does not require creating a communicator. It is useful for P2P transfer
+      cases where memory needs to be registered for RDMA without a communicator.
+
+      The hook is a process-global singleton -- calling this multiple times is safe
+      (subsequent calls are no-ops).
+
+      Args:
+          backend: The backend name (e.g., "ncclx")
       )",
       py::arg("backend"),
       py::call_guard<py::gil_scoped_release>());

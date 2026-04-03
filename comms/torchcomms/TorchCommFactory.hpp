@@ -37,6 +37,13 @@ class TorchCommFactory {
       const std::string& backend,
       const std::function<std::shared_ptr<c10::Allocator>()>& factory);
 
+  // Memory hook factory methods
+  void attach_memory_hook(const std::string& backend);
+
+  void register_hook_factory(
+      const std::string& backend,
+      const std::function<void()>& factory);
+
  private:
   std::shared_ptr<TorchCommBackend> create_generic_backend(
       const std::string& backend);
@@ -50,5 +57,6 @@ class TorchCommFactory {
       std::string,
       std::function<std::shared_ptr<c10::Allocator>()>>
       allocator_factories_;
+  std::unordered_map<std::string, std::function<void()>> hook_factories_;
 };
 } // namespace torch::comms

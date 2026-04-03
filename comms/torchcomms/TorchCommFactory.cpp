@@ -236,6 +236,27 @@ void TorchCommFactory::register_allocator_factory(
   allocator_factories_.emplace(backend, factory);
 }
 
+// Memory hook factory methods implementation
+void TorchCommFactory::attach_memory_hook(const std::string& backend) {
+  std::lock_guard<std::mutex> guard(mutex_);
+
+  auto it = hook_factories_.find(backend);
+  if (it != hook_factories_.end()) {
+    it->second();
+    return;
+  }
+
+  TORCH_CHECK(
+      false, "No memory hook factory registered for backend: ", backend);
+}
+
+void TorchCommFactory::register_hook_factory(
+    const std::string& backend,
+    const std::function<void()>& factory) {
+  std::lock_guard<std::mutex> guard(mutex_);
+  hook_factories_.emplace(backend, factory);
+}
+
 TorchCommFactory& TorchCommFactory::get() {
   static TorchCommFactory instance;
   return instance;
